@@ -19,6 +19,7 @@ export default function() {
 
   return (
     <div>
+      <h4>On every render, a new user is created on the D1 database</h4>
       {users.map((user) => (
         <span key={`user-${user.id.toString()}`} style={{ display: "block" }}>
           {user.id}
