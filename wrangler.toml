@@ -1,0 +1,8 @@
+name = "remix-d1-kysely-demo"
+compatibility_date = "2024-03-29"
+pages_build_output_dir = "build/client"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "d1-remix-d1-kysely-demo"
+database_id = "ac427eba-f2a5-4e2d-ba2e-79b9b5847a30"

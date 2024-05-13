@@ -1,35 +1,29 @@
-import type { MetaFunction } from "@remix-run/cloudflare";
+import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
+import { json } from "@remix-run/cloudflare";
+import { useLoaderData } from "@remix-run/react";
+import { getQueryBuilder } from "~/utils/query-builder";
 
-export const meta: MetaFunction = () => {
-  return [
-    { title: "New Remix App" },
-    {
-      name: "description",
-      content: "Welcome to Remix! Using Vite and Cloudflare!",
-    },
-  ];
-};
+export async function loader({ context }: LoaderFunctionArgs) {
+  const queryBuilder = getQueryBuilder(context)
+  await queryBuilder
+    .insertInto("user")
+    .values([{ lastname: "accetta", name: "nicolas", username: "niconiahi" }])
+    .execute();
 
-export default function Index() {
+  const users = await queryBuilder.selectFrom("user").select("id").execute();
+  return json({ users });
+}
+
+export default function() {
+  const { users } = useLoaderData<typeof loader>();
+
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <h1>Welcome to Remix (with Vite and Cloudflare)</h1>
-      <ul>
-        <li>
-          <a
-            target="_blank"
-            href="https://developers.cloudflare.com/pages/framework-guides/deploy-a-remix-site/"
-            rel="noreferrer"
-          >
-            Cloudflare Pages Docs - Remix guide
-          </a>
-        </li>
-        <li>
-          <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-            Remix Docs
-          </a>
-        </li>
-      </ul>
+    <div>
+      {users.map((user) => (
+        <span key={`user-${user.id.toString()}`} style={{ display: "block" }}>
+          {user.id}
+        </span>
+      ))}
     </div>
   );
 }
